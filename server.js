@@ -24,12 +24,11 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.get('/api/timestamp/:date_string?', function(req, res) {
-  const query = req.query;
-  const date = query.date;
+  const date = req.params.date_string;
   if (date) {
     const validDate = new Date(date);
     res.json({ unix: validDate.getTime(), utc: validDate.toUTCString() });
-  } else if (query.date_string === '') {
+  } else if (date === '') {
     const currentDate = new Date();
     res.json({ unix: date.getTime(), utc: date.toUTCString() });
   } else {
