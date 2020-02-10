@@ -24,18 +24,12 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.get('/api/timestamp/:date_string?', function(req, res) {
-  date_string = req.params.date_string;
-  let date;
-  const dateString =
-    typeof date === 'number'
-      ? (date = date_string * 1000)
-      : (date = date_string);
-
-
-  if (new Date(date)) {
-    const validDate = new Date(date);
+  var date_string = req.params.date_string;
+  const dateString = isNaN(date_string) ? date_string : date_string * 1000;
+  if (new Date(dateString)) {
+    const validDate = new Date(dateString);
     res.json({ unix: validDate.getTime(), utc: validDate.toUTCString() });
-  } else if (date === '') {
+  } else if (dateString === '') {
     const currentDate = new Date();
     res.json({ unix: currentDate.getTime(), utc: currentDate.toUTCString() });
   } else {
