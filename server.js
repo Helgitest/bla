@@ -25,12 +25,13 @@ app.get('/api/hello', function(req, res) {
 
 app.get('/api/timestamp/:date_string?', function(req, res) {
   const date = req.params.date_string;
+  console.log(date);
   if (date) {
     const validDate = new Date(date);
     res.json({ unix: validDate.getTime(), utc: validDate.toUTCString() });
   } else if (date === '') {
     const currentDate = new Date();
-    res.json({ unix: date.getTime(), utc: date.toUTCString() });
+    res.json({ unix: currentDate.getTime(), utc: currentDate.toUTCString() });
   } else {
     res.json({ unix: null, utc: 'Invalid Date' });
   }
