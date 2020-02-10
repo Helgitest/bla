@@ -24,9 +24,15 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.get('/api/timestamp/:date_string?', function(req, res) {
-  const date = req.params.date_string;
-  console.log(date);
-  if (date) {
+  date_string = req.params.date_string;
+  let date;
+  const dateString =
+    typeof date === 'number'
+      ? (date = date_string * 1000)
+      : (date = date_string);
+
+
+  if (new Date(date)) {
     const validDate = new Date(date);
     res.json({ unix: validDate.getTime(), utc: validDate.toUTCString() });
   } else if (date === '') {
