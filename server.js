@@ -23,17 +23,27 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get('/api/timestamp/:date_string?', function(req, res) {
-  var date_string = req.params.date_string;
-  const dateString = isNaN(date_string) ? date_string : date_string * 1000;
-  if (new Date(dateString)) {
-    const validDate = new Date(dateString);
-    res.json({ unix: validDate.getTime(), utc: validDate.toUTCString() });
-  } else if (dateString === '') {
-    const currentDate = new Date();
-    res.json({ unix: currentDate.getTime(), utc: currentDate.toUTCString() });
+app.get("/api/timestamp/", (req, res) => {
+  res.json({ unix: Date.now(), utc: Date() });
+});
+
+app.get("/api/timestamp/:date_string", (req, res) => {
+  let dateString = req.params.date_string;
+
+  //A 4 digit number is a valid ISO-8601 for the beginning of that year
+  //5 digits or more must be a unix time, until we reach a year 10,000 problem
+  if (/\d{5,}/.test(dateString)) {
+    var dateInt = parseInt(dateString);
+    //Date regards numbers as unix timestamps, strings are processed differently
+    res.json({ unix: dateString, utc: new Date(dateInt).toUTCString() });
+  }
+
+  let dateObject = new Date(dateString);
+
+  if (dateObject.toString() === "Invalid Date") {
+    res.json({ error: "Invaid Date" });
   } else {
-    res.json({ unix: null, utc: 'Invalid Date' });
+    res.json({ unix: dateObject.valueOf(), utc: dateObject.toUTCString() });
   }
 });
 
