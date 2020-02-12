@@ -35,13 +35,16 @@ app.get("/api/timestamp/:date_string", (req, res) => {
   if (/\d{5,}/.test(dateString)) {
     var dateInt = parseInt(dateString);
     //Date regards numbers as unix timestamps, strings are processed differently
-    res.json({ unix: dateString, utc: new Date(dateInt).toUTCString() });
+    console.log(new Date(dateInt));
+    if(new Date(dateInt) !== 'Invalid Date') {
+      res.json({ unix: dateString.valueOf(), utc: new Date(dateInt).toUTCString() });
+    }
   }
 
   let dateObject = new Date(dateString);
 
   if (dateObject.toString() === "Invalid Date") {
-    res.json({ error: "Invaid Date" });
+    res.json({"unix": null, "utc" : "Invalid Date" });
   } else {
     res.json({ unix: dateObject.valueOf(), utc: dateObject.toUTCString() });
   }
